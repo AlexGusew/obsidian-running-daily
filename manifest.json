@@ -1,0 +1,10 @@
+{
+	"id": "running-daily",
+	"name": "Running Daily",
+	"version": "0.1.0",
+	"minAppVersion": "1.4.10",
+	"description": "Keep a daily log in one note: add today's heading automatically, carry over unfinished tasks, and cycle checkboxes through todo, in progress and done.",
+	"author": "Alexander Gusev",
+	"authorUrl": "https://github.com/AlexGusew",
+	"isDesktopOnly": false
+}

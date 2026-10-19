@@ -1,0 +1,146 @@
+/*
+ * Running Daily — task status styles
+ *
+ *   [ ]  todo         Obsidian's default empty box (not touched here)
+ *   [/]  in progress  accent outline, bottom half filled, normal text
+ *   [x]  done         Obsidian's default checkmark + done text style
+ *   [X]  done         same as [x]
+ *   [-]  cancelled    faint box with a cross, faint struck-through text
+ *
+ * Obsidian marks the checkbox as "checked" for every character except a
+ * space, so [/] and [-] would otherwise show the done checkmark. The default
+ * text style (strike + muted) is only applied to x/X, so [/] text is already
+ * left alone.
+ *
+ * Views:
+ *   Live Preview  .markdown-source-view.mod-cm6 .HyperMD-task-line[data-task]
+ *                 (one DOM line per task, so nesting is not an issue)
+ *   Reading view  .markdown-rendered li.task-list-item[data-task]
+ *                 checkbox is "> input" (tight list) or "> p > input" (loose)
+ *
+ * All selectors below are more specific than Obsidian's
+ * input[type=checkbox]:checked rules, so no !important is needed.
+ */
+
+body {
+	--running-daily-progress-color: var(--checkbox-color);
+	--running-daily-progress-color-hover: var(--checkbox-color-hover);
+	--running-daily-cancelled-color: var(--text-faint);
+}
+
+
+/* ------------------------------------------------------------------ */
+/* In progress [/] — checkbox                                          */
+/* ------------------------------------------------------------------ */
+
+.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="/"] .task-list-item-checkbox,
+.markdown-rendered li.task-list-item[data-task="/"] > .task-list-item-checkbox,
+.markdown-rendered li.task-list-item[data-task="/"] > p > .task-list-item-checkbox {
+	background-color: transparent;
+	border-color: var(--running-daily-progress-color);
+}
+
+/* Replace the checkmark with a filled bottom half, inset from the border. */
+.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="/"] .task-list-item-checkbox::after,
+.markdown-rendered li.task-list-item[data-task="/"] > .task-list-item-checkbox::after,
+.markdown-rendered li.task-list-item[data-task="/"] > p > .task-list-item-checkbox::after {
+	content: "";
+	position: absolute;
+	inset: 50% 2px 2px 2px;
+	width: auto;
+	height: auto;
+	border-radius: 0 0 calc(var(--checkbox-radius) - 2px) calc(var(--checkbox-radius) - 2px);
+	background-color: var(--running-daily-progress-color);
+	-webkit-mask-image: none;
+	mask-image: none;
+}
+
+@media (hover: hover) {
+	.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="/"] .task-list-item-checkbox:hover,
+	.markdown-rendered li.task-list-item[data-task="/"] > .task-list-item-checkbox:hover,
+	.markdown-rendered li.task-list-item[data-task="/"] > p > .task-list-item-checkbox:hover {
+		background-color: transparent;
+		border-color: var(--running-daily-progress-color-hover);
+	}
+
+	.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="/"] .task-list-item-checkbox:hover::after,
+	.markdown-rendered li.task-list-item[data-task="/"] > .task-list-item-checkbox:hover::after,
+	.markdown-rendered li.task-list-item[data-task="/"] > p > .task-list-item-checkbox:hover::after {
+		background-color: var(--running-daily-progress-color-hover);
+	}
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Cancelled [-] — checkbox                                            */
+/* ------------------------------------------------------------------ */
+
+.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="-"] .task-list-item-checkbox,
+.markdown-rendered li.task-list-item[data-task="-"] > .task-list-item-checkbox,
+.markdown-rendered li.task-list-item[data-task="-"] > p > .task-list-item-checkbox {
+	background-color: transparent;
+	border-color: var(--checkbox-border-color);
+}
+
+/* Same box as Obsidian's checkmark (also drawn if the input is unchecked),
+   with a cross instead of the tick. */
+.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="-"] .task-list-item-checkbox::after,
+.markdown-rendered li.task-list-item[data-task="-"] > .task-list-item-checkbox::after,
+.markdown-rendered li.task-list-item[data-task="-"] > p > .task-list-item-checkbox::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: -1px;
+	inset-inline-start: -1px;
+	width: var(--checkbox-size);
+	height: var(--checkbox-size);
+	background-color: var(--running-daily-cancelled-color);
+	-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+	-webkit-mask-position: 50% 50%;
+	mask-position: 50% 50%;
+	-webkit-mask-size: 70%;
+	mask-size: 70%;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+}
+
+@media (hover: hover) {
+	.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="-"] .task-list-item-checkbox:hover,
+	.markdown-rendered li.task-list-item[data-task="-"] > .task-list-item-checkbox:hover,
+	.markdown-rendered li.task-list-item[data-task="-"] > p > .task-list-item-checkbox:hover {
+		background-color: transparent;
+		border-color: var(--checkbox-border-color-hover);
+	}
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Cancelled [-] — text                                                */
+/* ------------------------------------------------------------------ */
+
+.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="-"],
+.markdown-rendered li.task-list-item[data-task="-"] {
+	text-decoration: line-through;
+	color: var(--running-daily-cancelled-color);
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Reading view: keep done / cancelled styling off nested items        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * In Reading view a child list lives inside its parent <li>, and a
+ * line-through set on a block can't be switched off by its children.
+ * Text decoration does not pass into inline-block boxes, so the child list
+ * becomes a full-width inline-block. The colour is reset to normal; a child
+ * that is itself done/cancelled gets its own colour from its own rule.
+ * Collapsed items are skipped so Obsidian's display: none still wins.
+ */
+.markdown-rendered li.task-list-item:is([data-task="x"], [data-task="X"], [data-task="-"]):not(.is-collapsed) > :is(ul, ol) {
+	display: inline-block;
+	width: 100%;
+	vertical-align: top;
+	color: var(--text-normal);
+}
